@@ -26,4 +26,12 @@ class LLMClient:
     messages: list of dicts with role and content
     functions: list of function definitions for function calling
     """
+    response = openai.ChatCompletion.create(
+      model=self.model,
+      messages=messages,
+      temperature=self.temperature,
+      functions=functions
+      function_call="auto" if functions else None
+    )
+    return response['choices'][0]['message']
     
