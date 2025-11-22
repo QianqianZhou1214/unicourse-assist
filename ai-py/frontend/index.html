@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>RAG QA Demo</title>
+</head>
+<body>
+<h1>Course QA System</h1>
+<input type="text" id="question" placeholder="Input your questions" size="50">
+<button onclick="askQuestion()">Submit</button>
+<p id="answer"></p>
+
+<script>
+async function askQuestion() {
+    const question = document.getElementById("question").value;
+    const response = await fetch("http://127.0.0.1:8000/ask", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({question})
+    });
+    const data = await response.json();
+    document.getElementById("answer").innerText = data.answer;
+}
+</script>
+</body>
+</html>
