@@ -1,5 +1,5 @@
-from search import VectorSearcher
-from services.llm_client import generate_answer
+from .search import VectorSearcher
+from app.services.llm_client import generate_answer
 
 class RAGPipeline:
     def __init__(self):
@@ -16,3 +16,11 @@ class RAGPipeline:
         answer = generate_answer(query, context)
 
         return answer
+    
+
+if __name__ == "__main__":
+    pipeline = RAGPipeline()
+    question = "What are the courses in first semester of Applied Artificial Intelligence major?"
+    answer = pipeline.ask(question)
+    print("Question:", question)
+    print("Answer:", answer)
