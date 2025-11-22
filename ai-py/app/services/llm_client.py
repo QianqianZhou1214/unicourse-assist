@@ -1,37 +1,25 @@
+from openai import OpenAI
 import os
-from dotenv import load_dotenv
-import openai
 
-load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-openai.api_key = OPENAI_API_KEY
-
-class LLMClient:
-  """
-  encapsulates interactions with the OpenAI API. It
-  manages:
-  - Function calling
-  - System and user messages
-  - temperature settings
-  - model selection
-  """
-
-  def __init__(self, model="gpt-4-0613", temperature=0.2):
-    self.model = model
-    self.temperature = temperature
-  
-  def chat(self, messages, functions=None):
+def generate_answer(query: str, context: str) -> str:
     """
-    messages: list of dicts with role and content
-    functions: list of function definitions for function calling
+    Use OpenAI GPT to generate final answers
     """
-    response = openai.ChatCompletion.create(
-      model=self.model,
-      messages=messages,
-      temperature=self.temperature,
-      functions=functions
-      function_call="auto" if functions else None
+    prompt = f"""
+    You are an AI assistant. Use the following context to answer the question.
+
+    User Question: {query}
+    Context: {context}
+
+    Please provide a detailed and accurate answer.
+    """
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
     )
-    return response['choices'][0]['message']
-    
+    return response.choices[0].message["content"]
